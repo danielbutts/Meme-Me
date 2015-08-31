@@ -14,6 +14,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var topText: UITextField!
     @IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
+
+    override func prefersStatusBarHidden() -> Bool {
+        return true;
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,9 +47,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         bottomText.backgroundColor = UIColor.clearColor()
         bottomText.borderStyle = UITextBorderStyle.None
         bottomText.textAlignment = .Center
-        
-
-        
     }
     
     @IBAction func pickAnImageFromAlbum(sender: AnyObject) {
@@ -127,6 +128,44 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         textField.resignFirstResponder()
         
         return true;
+    }
+    
+    func generateMemedImage() -> UIImage
+    {
+        
+        //TODO: hide toolbar and navbar
+        
+        // Render view to an image
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        self.view.drawViewHierarchyInRect(self.view.frame,
+            afterScreenUpdates: true)
+        let memedImage : UIImage =
+        UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        //TODO: show toolbar and navbar
+
+        return memedImage
+    }
+    
+    @IBAction func shareMeme(sender: UIBarButtonItem) {
+        let controller = UIActivityViewController(activityItems: [generateMemedImage()], applicationActivities: nil)
+        
+        controller.completionWithItemsHandler = {
+            (activityType: String!, completed Bool, items: [AnyObject]!, err:NSError!) -> Void in
+            
+            self.save()
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        
+        self.presentViewController(controller, animated: true, completion: nil)
+        
+    }
+    
+    func save() {
+        //TODO: save the memed image to the camera roll
+        
+        var meme = Meme( topText: topText.text!, bottomText: bottomText.text!, image: imagePickerView.image!, memedImage: generateMemedImage())
     }
 
 }
