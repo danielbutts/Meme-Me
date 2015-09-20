@@ -80,11 +80,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = sourceType
-        self.presentViewController(imagePicker, animated: true, completion: nil)
+        presentViewController(imagePicker, animated: true, completion: nil)
     }
 
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
@@ -92,11 +92,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imagePickerView.contentMode = .ScaleAspectFit
             imagePickerView.image = image
         }
-        
-        
-        
-        //TODO: adjust constraints for textfields based on height of scaled image
-        
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -110,8 +105,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         
         
-        UIGraphicsBeginImageContext(self.imagePickerView.frame.size)
-        self.view.drawViewHierarchyInRect(self.imagePickerView.frame, afterScreenUpdates: true)
+        UIGraphicsBeginImageContext(imagePickerView.frame.size)
+        view.drawViewHierarchyInRect(imagePickerView.frame, afterScreenUpdates: true)
         let memedImage : UIImage =
         UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -133,7 +128,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             self.dismissViewControllerAnimated(true, completion: nil)
         }
         
-        self.presentViewController(controller, animated: true, completion: nil)
+        presentViewController(controller, animated: true, completion: nil)
     }
     
     func save() {

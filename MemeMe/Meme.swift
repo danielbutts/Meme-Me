@@ -1,6 +1,6 @@
 import UIKit
 
-class Meme {
+struct Meme {
     let topText: String
     let bottomText: String
     let image: UIImage
