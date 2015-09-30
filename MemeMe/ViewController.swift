@@ -17,6 +17,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
     
     //TODO: Connect Cancel button (what deos this do?)
     
@@ -31,8 +32,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         
-        self.topText.delegate = self;
-        self.bottomText.delegate = self;
+        shareButton.enabled = false
+        
+        topText.delegate = self;
+        bottomText.delegate = self;
         setTextAttributes(topText, fieldText: "TOP")
         setTextAttributes(bottomText, fieldText: "BOTTOM")
         
@@ -91,6 +94,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imagePickerView.contentMode = .ScaleAspectFit
             imagePickerView.image = image
+            shareButton.enabled = true
         }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -143,14 +147,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // Meme Text Editing Functions
     
     func keyboardWillShow(notification: NSNotification) {
-        if self.bottomText.isFirstResponder() == true {
-            self.view.frame.origin.y -= getKeyboardHeight(notification)
+        if bottomText.isFirstResponder() == true {
+            view.frame.origin.y -= getKeyboardHeight(notification)
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if self.bottomText.isFirstResponder() == true {
-            self.view.frame.origin.y += getKeyboardHeight(notification)
+        if bottomText.isFirstResponder() == true {
+            view.frame.origin.y += getKeyboardHeight(notification)
         }
     }
     
@@ -173,10 +177,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // TextFieldDelegate Functions
     
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        
+        var oldText = textField.text as NSString
+        var newText = oldText.stringByReplacingCharactersInRange(range, withString: string.uppercaseString)
+        textField.text = String(newText)
+        
+        return false
+    }
+    
     func textFieldDidBeginEditing(textField: UITextField) {
         textField.text = ""
     }
-
+    
+    func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+        if textField.text == "" {
+            if bottomText.isFirstResponder() == true {
+                textField.text = "BOTTOM"
+            } else {
+                textField.text = "TOP"
+            }
+        }
+        return true
+    }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
