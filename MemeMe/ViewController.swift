@@ -17,11 +17,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
-    @IBOutlet weak var shareButton: UIBarButtonItem!
-    
-    //TODO: Connect Cancel button (what deos this do?)
-    
-    var sentMemes = [Meme]()
+    @IBOutlet weak var saveButton: UIBarButtonItem!
     
     override func prefersStatusBarHidden() -> Bool {
         return true;
@@ -32,7 +28,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         
-        shareButton.enabled = false
+        saveButton.enabled = false
         
         topText.delegate = self;
         bottomText.delegate = self;
@@ -90,11 +86,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    @IBAction func cancelButton(sender: AnyObject) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imagePickerView.contentMode = .ScaleAspectFit
             imagePickerView.image = image
-            shareButton.enabled = true
+            saveButton.enabled = true
         }
         dismissViewControllerAnimated(true, completion: nil)
     }
@@ -122,28 +122,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return memedImage
     }
     
-    @IBAction func shareMeme(sender: UIBarButtonItem) {
-        let controller = UIActivityViewController(activityItems: [generateMemedImage()], applicationActivities: nil)
-        
-        controller.completionWithItemsHandler = {
-            (activityType: String!, completed Bool, items: [AnyObject]!, err:NSError!) -> Void in
-            
-            self.save()
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
-        
-        presentViewController(controller, animated: true, completion: nil)
-    }
+//    @IBAction func shareMeme(sender: UIBarButtonItem) {
+//        let controller = UIActivityViewController(activityItems: [generateMemedImage()], applicationActivities: nil)
+//        
+//        controller.completionWithItemsHandler = {
+//            (activityType: String!, completed Bool, items: [AnyObject]!, err:NSError!) -> Void in
+//            
+//            self.dismissViewControllerAnimated(true, completion: nil)
+//        }
+//        
+//        presentViewController(controller, animated: true, completion: nil)
+//    }
     
-    func save() {
-        //TODO: Save Meme object to persistent storage on phone
-        
+    @IBAction func saveMeme(sender: AnyObject) {
         var meme = Meme( topText: topText.text!, bottomText: bottomText.text!, image: imagePickerView.image!, memedImage: generateMemedImage())
-        sentMemes.append(meme)
         
-        let object = UIApplication.sharedApplication().delegate
-        let appDelegate = object as! AppDelegate
-        appDelegate.memes.append(meme)
+        // Add the meme to the Memes array in the AppDelegate
+        var memes = (UIApplication.sharedApplication().delegate as! AppDelegate).memes
+        memes.append(meme)
+        
+
+        for meme in memes {
+            println(meme.topText)
+        }
+        println(memes.count)
+//        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
 

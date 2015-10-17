@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>2C5547DF-30A7-4B6D-B4D0-33F9CADEAF68</string>
 	<key>IDESourceControlProjectName</key>
-	<string>MemeMe</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>041423475B0501B08C1C5135860DAB5F977674A4</key>
 		<string>https://github.com/sporthacker/Meme-Me.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>MemeMe.xcodeproj</string>
+	<string>MemeMe.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>041423475B0501B08C1C5135860DAB5F977674A4</key>
