@@ -1,5 +1,5 @@
 //
-//  SentMemeDetailViewController.swift
+//  SavedMemeDetailViewController.swift
 //  MemeMe
 //
 //  Created by Daniel Butts on 10/17/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SentMemeDetailViewController : UIViewController {
+class SavedMemeDetailViewController : UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
     
@@ -16,12 +16,11 @@ class SentMemeDetailViewController : UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.tabBarController?.tabBar.hidden = true
-        self.imageView!.image = meme.memedImage
+        
+        imageView.image = meme.memedImage
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        self.tabBarController?.tabBar.hidden = false
     }
 }

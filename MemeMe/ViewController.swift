@@ -17,7 +17,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
-    @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
     
     override func prefersStatusBarHidden() -> Bool {
         return true;
@@ -28,7 +28,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         
-        saveButton.enabled = false
+        shareButton.enabled = false
         
         topText.delegate = self;
         bottomText.delegate = self;
@@ -94,15 +94,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imagePickerView.contentMode = .ScaleAspectFit
             imagePickerView.image = image
-            saveButton.enabled = true
+            shareButton.enabled = true
         }
         dismissViewControllerAnimated(true, completion: nil)
     }
     
     func generateMemedImage() -> UIImage
     {
-        //TODO: only grab extents of scaled image
-        
         // Hide toolbar and navbar
         topBar.hidden = true
         bottomBar.hidden = true
@@ -122,34 +120,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return memedImage
     }
     
-//    @IBAction func shareMeme(sender: UIBarButtonItem) {
-//        let controller = UIActivityViewController(activityItems: [generateMemedImage()], applicationActivities: nil)
-//        
-//        controller.completionWithItemsHandler = {
-//            (activityType: String!, completed Bool, items: [AnyObject]!, err:NSError!) -> Void in
-//            
-//            self.dismissViewControllerAnimated(true, completion: nil)
-//        }
-//        
-//        presentViewController(controller, animated: true, completion: nil)
-//    }
-    
-    @IBAction func saveMeme(sender: AnyObject) {
+    @IBAction func shareMeme(sender: AnyObject) {
         var meme = Meme( topText: topText.text!, bottomText: bottomText.text!, image: imagePickerView.image!, memedImage: generateMemedImage())
         
-        // Add the meme to the Memes array in the AppDelegate
-        var memes = (UIApplication.sharedApplication().delegate as! AppDelegate).memes
-        memes.append(meme)
+        let controller = UIActivityViewController(activityItems: [meme.memedImage], applicationActivities: nil)
         
-
-        for meme in memes {
-            println(meme.topText)
+        controller.completionWithItemsHandler = {
+            (activityType: String!, completed Bool, items: [AnyObject]!, err:NSError!) -> Void in
+            
+            var delegate : AppDelegate {
+                return (UIApplication.sharedApplication().delegate as! AppDelegate)
+            }
+            delegate.memes.append(meme)
+            self.dismissViewControllerAnimated(true, completion: nil)
+            
         }
-        println(memes.count)
-//        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
+        
+        presentViewController(controller, animated: true, completion: nil)
 
+    }
 
     // Meme Text Editing Functions
     

@@ -12,25 +12,31 @@ class SentMemeCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
-    var memes = [Meme]()
+    @IBOutlet weak var topNavigationBar: UINavigationItem!
+    
+    var memes = (UIApplication.sharedApplication().delegate as! AppDelegate).memes
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let space: CGFloat = 2.0
-        let dimension = (self.view.frame.size.width - (2 * space)) / 3.0
+        let dimension = (view.frame.size.width - (2 * space)) / 3.0
         
         flowLayout.minimumInteritemSpacing = space
         flowLayout.minimumLineSpacing = space
         flowLayout.itemSize = CGSize(width: dimension,height: dimension)
-    
-        memes = (UIApplication.sharedApplication().delegate as! AppDelegate).memes
-
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        tabBarController?.tabBar.hidden = false
+
+        if let tabBar = tabBarController?.tabBar {
+            tabBar.hidden = false
+        }
+
+        memes = (UIApplication.sharedApplication().delegate as! AppDelegate).memes
+        
+        collectionView!.reloadData()
     }
     
     // MARK: Collection View Data Source
@@ -43,16 +49,20 @@ class SentMemeCollectionViewController: UICollectionViewController {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MemeCollectionViewCell", forIndexPath: indexPath) as! MemeCollectionViewCell
         let meme = memes[indexPath.row]
         cell.memeImageView?.image = meme.memedImage
-        cell.backgroundView?.backgroundColor = UIColor.blackColor()
+        cell.backgroundView?.backgroundColor = UIColor.whiteColor()
         return cell
     }
     
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath) {
         
-        let detailController = storyboard!.instantiateViewControllerWithIdentifier("SentMemeDetailViewController") as! SentMemeDetailViewController
+        let detailController = storyboard!.instantiateViewControllerWithIdentifier("SavedMemeDetail") as! SavedMemeDetailViewController
         detailController.meme = memes[indexPath.row]
+        
         navigationController!.pushViewController(detailController, animated: true)
         
+        if let tabBar = tabBarController?.tabBar {
+            tabBar.hidden = true
+        }
     }
     
 }

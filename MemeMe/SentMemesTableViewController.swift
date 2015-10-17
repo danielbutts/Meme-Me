@@ -8,23 +8,35 @@
 
 import UIKit
 
-class SentMemesTableViewController: UIViewController, UITableViewDataSource {
-    
+
+class SentMemesTableViewController: UITableViewController, UITableViewDataSource {
+
     var memes = [Meme]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+      
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        var delegate : AppDelegate {
+            return (UIApplication.sharedApplication().delegate as! AppDelegate)
+        }
+        if let tabBar = tabBarController?.tabBar {
+            tabBar.hidden = false
+        }
+
         memes = (UIApplication.sharedApplication().delegate as! AppDelegate).memes
-        
+
+        tableView.reloadData()
     }
     
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return memes.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("MemeCell") as! UITableViewCell
         let meme = memes[indexPath.row]
@@ -36,11 +48,15 @@ class SentMemesTableViewController: UIViewController, UITableViewDataSource {
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        let detailController = storyboard!.instantiateViewControllerWithIdentifier("SentMemeDetailViewController") as! SentMemeDetailViewController
+        let detailController = storyboard!.instantiateViewControllerWithIdentifier("SavedMemeDetail") as! SavedMemeDetailViewController
         detailController.meme = memes[indexPath.row]
         navigationController!.pushViewController(detailController, animated: true)
+        
+        if let tabBar = tabBarController?.tabBar {
+            tabBar.hidden = true
+        }
         
     }
     
